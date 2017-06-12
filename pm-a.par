@@ -1,0 +1,7 @@
+E             /Coordinate system (E or G) PM must be in the correct system
+168.3700,22.15167 /Ra Dec
+ -6.93 3.73   /PM  9.8
+ -8.67 3.91  /PM
+233          /distance to the dwarf galaxy (kpc) (Bellazzini etal 2005)
++79.1 0.6   /Heliocentric radial velocity from Koch et al 2007, AJ 134, 566
+1234567899    /Seed for random number
