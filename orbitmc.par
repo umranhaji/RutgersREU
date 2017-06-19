@@ -1,0 +1,18 @@
+ivel.data
+X            \potential
+220.1691      \l
+67.23124      \b
+233         \ distance
+100.0         \ integration time
+500000       \ number of steps
+1000         \ number of trials
+1.0e3        \ L
+1.0 3.0      \ M/L's
+30.0         \r_t lim
+120.0        \r_peri value
+300
+500
+200
+600
+400
+250
