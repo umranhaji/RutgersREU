@@ -42,18 +42,114 @@ mol1 = 1.
 mol2 = 3.
 
 name = str(raw_input("Name?:"))
-ra = float(raw_input("RA (degrees)?:"))
-dec = float(raw_input("DEC (degrees)?:"))
-distance = float(raw_input("Distance (kpc)?:"))
-mu_a = float(raw_input("mu_a (mas/cent)?:"))
-mu_a_std = float(raw_input("mu_a uncertainty?:"))
-mu_d = float(raw_input("mu_d (mas/cent)?:"))
-mu_d_std = float(raw_input("mu_d uncertainty?:"))
-rv = float(raw_input("Radial Velocity (km/s)?:"))
-rv_std = float(raw_input("Radial Velocity uncertainty?:"))
-L = float(raw_input("Luminosity (solar units)?:"))
-rtlim = float(raw_input("Limiting Radius (arcmin)?:"))
+#ra = float(raw_input("RA (degrees)?:"))
+#dec = float(raw_input("DEC (degrees)?:"))
+#distance = float(raw_input("Distance (kpc)?:"))
+#mu_a = float(raw_input("mu_a (mas/cent)?:"))
+#mu_a_std = float(raw_input("mu_a uncertainty?:"))
+#mu_d = float(raw_input("mu_d (mas/cent)?:"))
+#mu_d_std = float(raw_input("mu_d uncertainty?:"))
+#rv = float(raw_input("Radial Velocity (km/s)?:"))
+#rv_std = float(raw_input("Radial Velocity uncertainty?:"))
+#L = float(raw_input("Luminosity (solar units)?:"))
+#rtlim = float(raw_input("Limiting Radius (arcmin)?:"))
 
+if name == "Car":
+    ra = 100.4029
+    dec = -50.9661
+    distance = 105
+    mu_a = 23
+    mu_a_std = 13
+    mu_d = 24
+    mu_d = 11
+    rv = 222.9
+    rv_std = .3
+    L = .38e6
+    rtlim = 8.20
+if name == "Dra":
+    ra - 260.06
+    dec = 57.965
+    distance = 76
+    mu_a = 17.7
+    mu_a_std = 6.3
+    mu_d = -22.1
+    mu_d_std = 6.3
+    rv = -291
+    rv_std = 0.5
+    L = .29e6
+    rtlim = 10
+if name == "For":
+    ra = 39.75935
+    dec = -34.5044
+    distance = 147
+    mu_a = 47.6
+    mu_a_std = 4.6
+    mu_d = -36
+    mu_d_std = 4.1
+    rv = 55.3
+    rv_std = .3
+    L = 20e6
+    rtlim = 16.60
+if name == "Leo_I":
+    ra = 152.1171
+    dec = 12.3064
+    distance = 254
+    mu_a = -11.4
+    mu_a_std = 3
+    mu_d = -12.6
+    mu_d_std = 2.9
+    rv = 282.9
+    rv_std = .5
+    L = 5.5e6
+    rtlim = 3.40
+if name == "Leo_II":
+    ra = 168.37
+    dec = 22.1517
+    distance = 233
+    mu_a = -6.9
+    mu_a_std = 3.7
+    mu_d = -8.7
+    mu_d_std = 3.9
+    rv = 78
+    rv_std = 0.5
+    L = .74e6
+    rtlim = 2.60
+if name == "Scl":
+    ra = 15.0392
+    dec = -33.7092
+    distance = 86
+    mu_a = 8.6
+    mu_a_std = 13
+    mu_d = 2.1
+    mu_d_std = 13.5
+    rv = 111.4
+    rv_std = 0.3
+    L = 2.3e6
+    rtlim = 11.30
+if name == "Sgr":
+    ra = 283.7639
+    dec = -30.4799
+    distance = 26
+    mu_a = -259
+    mu_a_std = 11
+    mu_d = -145
+    mu_d_std = 11
+    rv = 140.7
+    rv_std = 0.4
+    L = 21e6
+    rtlim = 342
+if name == "UMi":
+    ra = 227.2854
+    dec = 67.2225
+    distance = 76
+    mu_a = -50
+    mu_a_std = 17
+    mu_d = 22
+    mu_d_std = 16
+    rv = -246.9
+    rv_std = 0.8
+    L = .29e6
+    rtlim = 8.20
 
 #Proper motion uncertainties are taken as the std. devs. for the Gaussian distributions for the MC
 
@@ -296,9 +392,9 @@ def integrate_orbit(pot, x0, y0, z0, vx0, vy0, vz0, vcon=vcon, t=t, NSTEP=NSTEP)
     am0=np.sqrt(amx0*amx0+amy0*amy0+amz0*amz0)
     bam0=np.arcsin(amz0/am0)
     lam0=np.arctan2(-amy0,-amx0)
-    if lam0 < 0.:
+    while lam0 < 0.:
         lam0 += 2.*np.pi
-    if lam0 > 2.*np.pi:
+    while lam0 > 2.*np.pi:
         lam0 -= 2.*np.pi
 
     #Initial energy
@@ -349,13 +445,10 @@ def integrate_orbit(pot, x0, y0, z0, vx0, vy0, vz0, vcon=vcon, t=t, NSTEP=NSTEP)
     bamf = np.arcsin(amz/am)
     dbam = bamf - bam0
     lamf=np.arctan2(-amy,-amx)
-    if lamf < 0.:
+    while lamf < 0.:
         lamf += 2.*np.pi
-    if lamf > 2.*np.pi:
+    while lamf > 2.*np.pi:
         lamf -= 2.*np.pi
-
-
-
 
 
 ###ADDED THE FOLLOWING
@@ -366,8 +459,6 @@ def integrate_orbit(pot, x0, y0, z0, vx0, vy0, vz0, vcon=vcon, t=t, NSTEP=NSTEP)
         else:
             lamf += 2.*np.pi
 ################
-
-
 
 
 
