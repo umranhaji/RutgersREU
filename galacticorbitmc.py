@@ -1,5 +1,5 @@
 import numpy as np
-import warnings, sys, time, mpmath
+import warnings, sys, time, mpmath, json
 from astropy.utils.exceptions import AstropyWarning
 warnings.simplefilter('ignore', category=AstropyWarning)
 from astropy import units as u
@@ -27,16 +27,7 @@ t = 100 #Gyr
 NSTEP = 100000
 pot = 'X'
 
-"""
-def linear_to_angular_size(linear_size, distance):
-    #Returns angular size in arcminutes
-    linear_size=float(linear_size)
-    theta = np.arctan(linear_size/distance) #Radians
-    return theta * 3437.75 #Arcmin
-"""
-
 rpval = 120. #kpc
-
 #Min and max mass-to-luminosity ratio, in solar units
 mol1 = 1.
 mol2 = 3.
@@ -57,34 +48,48 @@ name = str(raw_input("Name?:"))
 if name == "Car":
     ra = 100.4029
     dec = -50.9661
-    distance = 105
-    mu_a = 23
-    mu_a_std = 13
-    mu_d = 24
-    mu_d = 11
+    distance = 105.
+    mu_a = 23.
+    mu_a_std = 13.
+    mu_d = 24.
+    mu_d_std = 11.
     rv = 222.9
     rv_std = .3
     L = .38e6
     rtlim = 8.20
 if name == "Dra":
-    ra - 260.06
+    ra = 260.06
     dec = 57.965
-    distance = 76
+    distance = 76.
     mu_a = 17.7
     mu_a_std = 6.3
     mu_d = -22.1
     mu_d_std = 6.3
-    rv = -291
+    rv = -291.
     rv_std = 0.5
     L = .29e6
-    rtlim = 10
+    rtlim = 10.
+
+if name == "Dra2":
+    ra = 260.0600  
+    dec = 57.9650   
+    distance = 76.
+    mu_a = 5.69  
+    mu_a_std = 0.90     
+    mu_d = -16.73  
+    mu_d_std = 0.90   
+    rv = -291.0  
+    rv_std = 0.5
+    L = .29e6
+    rtlim = 10.
+
 if name == "For":
     ra = 39.75935
     dec = -34.5044
-    distance = 147
+    distance = 147.
     mu_a = 47.6
     mu_a_std = 4.6
-    mu_d = -36
+    mu_d = -36.
     mu_d_std = 4.1
     rv = 55.3
     rv_std = .3
@@ -93,9 +98,9 @@ if name == "For":
 if name == "Leo_I":
     ra = 152.1171
     dec = 12.3064
-    distance = 254
+    distance = 254.
     mu_a = -11.4
-    mu_a_std = 3
+    mu_a_std = 3.
     mu_d = -12.6
     mu_d_std = 2.9
     rv = 282.9
@@ -105,51 +110,117 @@ if name == "Leo_I":
 if name == "Leo_II":
     ra = 168.37
     dec = 22.1517
-    distance = 233
+    distance = 233.
     mu_a = -6.9
     mu_a_std = 3.7
     mu_d = -8.7
     mu_d_std = 3.9
-    rv = 78
+    rv = 78.
     rv_std = 0.5
     L = .74e6
     rtlim = 2.60
+
 if name == "Scl":
     ra = 15.0392
     dec = -33.7092
-    distance = 86
+    distance = 86.
     mu_a = 8.6
-    mu_a_std = 13
+    mu_a_std = 13.
     mu_d = 2.1
     mu_d_std = 13.5
     rv = 111.4
     rv_std = 0.3
     L = 2.3e6
     rtlim = 11.30
+
+if name == "Scl2":
+    ra = 15.0392   
+    dec = -33.7092   
+    distance = 86.    
+    mu_a = 2.96 
+    mu_a_std = 2.09      
+    mu_d = -13.58  
+    mu_d_std = 2.14   
+    rv = 111.4  
+    rv_std = 0.3 
+    L = 2.3e6
+    rtlim = 11.30
+
 if name == "Sgr":
     ra = 283.7639
     dec = -30.4799
-    distance = 26
-    mu_a = -259
-    mu_a_std = 11
-    mu_d = -145
-    mu_d_std = 11
+    distance = 26.
+    mu_a = -259.
+    mu_a_std = 11.
+    mu_d = -145.
+    mu_d_std = 11.
     rv = 140.7
     rv_std = 0.4
     L = 21e6
-    rtlim = 342
+    rtlim = 342.
 if name == "UMi":
     ra = 227.2854
     dec = 67.2225
-    distance = 76
-    mu_a = -50
-    mu_a_std = 17
-    mu_d = 22
-    mu_d_std = 16
+    distance = 76.
+    mu_a = -50.
+    mu_a_std = 17.
+    mu_d = 22.
+    mu_d_std = 16.
     rv = -246.9
     rv_std = 0.8
     L = .29e6
     rtlim = 8.20
+if name == "LMC":
+    ra = 78.76
+    dec = -69.19
+    distance = 51.
+    mu_a = 191.
+    mu_a_std = 2.
+    mu_d = 22.9
+    mu_d_std = 4.7
+    rv = 262.2
+    rv_std = 3.4
+    L = 1500.e6
+    rtlim = 600.
+if name == "SMC":
+    ra = 16.25
+    dec = -72.42
+    distance = 64.
+    mu_a = 77.2
+    mu_a_std = 6.3
+    mu_d = -111.7
+    mu_d_std = 6.1
+    rv = 145.6
+    rv_std = 0.6
+    L = 460.e6
+    rtlim = 120.
+
+if name == "Pyxis":
+    ra = 136.9908 
+    dec = -37.2214
+    distance = 39.4  
+    mu_a = 109.
+    mu_a_std = 31.     
+    mu_d = 68.   
+    mu_d_std = 29.
+    rv = 35.7  
+    rv_std = 3.0
+    L = 1.7e4
+    rtlim = 6.2
+
+if name == "NGC2419":
+    ra = 114.535  
+    dec = 38.8824    
+    distance = 87.5  
+    mu_a = -17.  
+    mu_a_std = 26.     
+    mu_d = -49.   
+    mu_d_std = 17.    
+    rv = -20.3  
+    rv_std = 0.7 
+    L = 5.e5
+    rtlim = 7.5
+
 
 #Proper motion uncertainties are taken as the std. devs. for the Gaussian distributions for the MC
 
@@ -537,13 +608,16 @@ def pick3points(idpe,idap,index,x,y,z):
         point3 = (x[idpe[index]], y[idpe[index]], z[idpe[index]])
 
     #Point between the two
-    indexbetween = (idpe[index]+idap[index])/2
+    indexbetween = int((idpe[index]+idap[index])/2)
     point2 = (x[indexbetween], y[indexbetween], z[indexbetween])
+
     return [point1, point2, point3]
 
 def FINDPLANE(points): #points is list of three 3-tuples
-    point1, point2, point3 = points
-    
+    point1, point2, point3 = points    
+    for point in [point1, point2, point3]:
+        point = tuple([float(component) for component in point])
+
     #Vector p1p2 goes from p1 to p2, vector p1p3 goes from p1 to p3
     #The points are ordered in time, so galaxy reaches p1, then p2, then p3
     #Cross product p1p2 X p1p3 thus yields normal vector to 
@@ -553,15 +627,20 @@ def FINDPLANE(points): #points is list of three 3-tuples
     p1p2 = (point2[0]-point1[0], point2[1]-point1[1], point2[2]-point1[2]) 
     p1p3 = (point3[0]-point1[0], point3[1]-point1[1], point3[2]-point1[2])
     normalvector = np.cross(p1p2, p1p3)
+
     return normalvector
 
 def FINDINC(normalvector):
     #Normal vector is assumed to be parallel to angular velocity vector
     a, b, c = normalvector 
-    
+
     #Inclination angle of orbit plane to galactic plane.
     #Zero is in galactic plane and orbiting in the direction of galactic rotation
-    theta=np.arccos(-c/np.sqrt(a*a+b*b+c*c))
+    theta=np.arccos(-float(c)/np.sqrt(float(a**2+b**2+c**2)))
+    while theta < 0:
+        theta += 2.*np.pi
+    while theta > 2.*np.pi:
+        theta -= 2.*np.pi
     return theta #radians!
 
 def FINDLONGITUDE(normalvector):     
@@ -570,26 +649,26 @@ def FINDLONGITUDE(normalvector):
     a = normalvector[0]
     b = normalvector[1]
     omega=np.arctan2(b,a)+np.pi/2.
-    if omega < 0:
+    while omega < 0:
         omega += 2.*np.pi
-    if omega > 2.*np.pi:
+    while omega > 2.*np.pi:
         omega -= 2.*np.pi
     return omega #radians
 
-def find_lpole_bpole(theta, omega):
-    bpole=theta-(np.pi/2.)
-    lpole=omega+0.5*np.pi
-    lpole = np.rad2deg(lpole)
-    bpole = np.rad2deg(bpole)
-    if lpole >= 0:
-        lpole = lpole % 360
-    else:
-        lpole = lpole % -360
-    if bpole >= 0:
-        bpole = bpole % 360
-    else:
-        bpole = bpole % -360
-    return lpole, bpole
+#def find_lpole_bpole(theta, omega):
+#    bpole=theta-(np.pi/2.)
+#    lpole=omega+0.5*np.pi
+#    lpole = np.rad2deg(lpole)
+#    bpole = np.rad2deg(bpole)
+#    if lpole >= 0:
+#        lpole = lpole % 360
+#    else:
+#        lpole = lpole % -360
+#    if bpole >= 0:
+#        bpole = bpole % 360
+#    else:
+#        bpole = bpole % -360
+#    return lpole, bpole
 
 def get_rt(r2, idpe, idap, L=L, mol1=mol1, mol2=mol2, d=distance, ratoam=ratoam):
     #Calculate the tidal radius at pericenter and store it
@@ -684,16 +763,12 @@ for velocityvector in velsample:
     theta = np.mean(inclinations)
     omega = np.mean(longitudes)
     
-
-
-
-
-
-    #ADDED THE FOLOWING
     bpole = theta - np.pi/2.
     lpole = omega + np.pi/2
-    if lpole > 2.*np.pi:
+    while lpole > 2.*np.pi:
         lpole -= 2.*np.pi
+    while lpole < 0:
+        lpole += 2.*np.pi
 
     #do some checking to avoid splitting omega values across 0/2pi
     if experiment != 1:
@@ -702,7 +777,7 @@ for velocityvector in velsample:
                 omega -= -2.*np.pi
             else:
                 omega += 2.*np.pi ####omega(i)????
-     ###############
+
     thetas.append(theta)
     omegas.append(omega)
 
@@ -745,9 +820,6 @@ for velocityvector in velsample:
 
 
 
-
-
-
     #
 #        -- and the same for lam
     if experiment != 1:
@@ -756,13 +828,6 @@ for velocityvector in velsample:
                 lam0 -= 2.*np.pi
             else:
                lam0 += 2.*np.pi
-
-
-
-
-
-
-
 
 
 
@@ -802,6 +867,31 @@ amz0=x0*vy0-y0*vx0
 
 print
 
+#Create dictionary with all parameter samples and dump to JSON, for easy later analysis.
+for item in [peris, apos, eccs, periods, rt1s, rt2s, thetas, omegas, lpoles, bpoles, lam0s, bam0s, dlams, dbams, deltaEs]:
+    item = np.array(item)
+
+samples = {'peris':peris,
+           'apos':apos, 
+           'eccs':eccs,
+           'periods':periods,
+           'rt1s':rt1s,
+           'rt2s':rt2s,
+           'thetas':thetas,
+           'omegas':omegas,
+           'lpoles':lpoles,
+           'bpoles':bpoles,
+           'lam0s':lam0s,
+           'bam0s':bam0s,
+           'dlams':dlams,
+           'dbams':dbams,
+           'deltaEs':deltaEs}
+
+print "Writing to JSON file..."
+with open('galacticorbitmc_{0}_{1}_{2}_{3}.json' .format(name, pot, NMC, NSTEP), 'w') as jsonfile:
+    json.dump(samples, jsonfile)
+ 
+#Write results
 with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 'w') as f:
     f.write("Input Galaxy Parameters:\n")
     f.write("Name \t\t\t\t\t: {0} \n" .format(name))
@@ -832,6 +922,7 @@ with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 
     f.write("Min Perigalacticon (kpc) \t: {0} \n" .format(np.amin(peris)))
     lower, upper = st.t.interval(0.95, len(peris)-1, loc=np.mean(peris), scale=st.sem(peris))
     f.write("95% Confidence Limits (kpc) \t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n" .format(np.percentile(peris, 2.5, interpolation='nearest'), np.percentile(peris, 97.5, interpolation='nearest')))
     f.write("Fraction of orbits with peri < {0} is {1} \n\n" .format(rpval, np.count_nonzero(np.array(peris) < rpval)/float(len(peris)))) 
 
     f.write("Actual Apogalacticon (kpc) \t: {0} \n" .format(apos[0]))
@@ -839,21 +930,24 @@ with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 
     f.write("Max Apogalacticon (kpc) \t: {0} \n" .format(np.amax(apos)))
     f.write("Min Apogalacticon (kpc) \t: {0} \n" .format(np.amin(apos)))
     lower, upper = st.t.interval(0.95, len(apos)-1, loc=np.mean(apos), scale=st.sem(apos))
-    f.write("95% Confidence Limits (kpc) \t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits (kpc) \t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.percentile(apos, 2.5, interpolation='nearest'), np.percentile(apos, 97.5, interpolation='nearest')))
 
     f.write("Actual Eccentricity \t\t: {0} \n" .format(eccs[0]))
     f.write("Mean Eccentricity \t\t: {0} +- {1} \n" .format(np.mean(eccs), np.std(eccs)))
     f.write("Max Eccentricity \t\t: {0} \n" .format(np.amax(eccs)))
     f.write("Min Eccentricity \t\t: {0} \n" .format(np.amin(eccs)))
     lower, upper = st.t.interval(0.95, len(eccs)-1, loc=np.mean(eccs), scale=st.sem(eccs))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.percentile(eccs, 2.5, interpolation='nearest'), np.percentile(eccs, 97.5, interpolation='nearest')))
 
     f.write("Actual Orbital Period (Gyr) \t: {0} \n" .format(periods[0]))
     f.write("Mean Orbital Period (Gyr) \t: {0} +- {1} \n" .format(np.mean(periods), np.std(periods)))
     f.write("Max Orbital Period (Gyr) \t: {0} \n" .format(np.amax(periods)))
     f.write("Min Orbital Period (Gyr) \t: {0} \n" .format(np.amin(periods)))
     lower, upper = st.t.interval(0.95, len(periods)-1, loc=np.mean(periods), scale=st.sem(periods))
-    f.write("95% Confidence Limits (Gyr) \t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits (Gyr) \t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.percentile(periods, 2.5, interpolation='nearest'), np.percentile(periods, 97.5, interpolation='nearest')))
 
     f.write("Actual r_t1 (arcmin) \t\t: {0} \n" .format(rt1s[0]))
     f.write("Mean r_t1 (arcmin) \t\t: {0} +- {1} \n" .format(np.mean(rt1s), np.std(rt1s)))
@@ -861,6 +955,7 @@ with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 
     f.write("Min r_t1 (arcmin) \t\t: {0} \n" .format(np.amin(rt1s)))
     lower, upper = st.t.interval(0.95, len(rt1s)-1, loc=np.mean(rt1s), scale=st.sem(rt1s))
     f.write("95% Confidence Limits (arcmin) \t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n" .format(np.percentile(rt1s, 2.5, interpolation='nearest'), np.percentile(rt1s, 97.5, interpolation='nearest')))
     f.write("Fraction smaller than {0} \t: {1} \n\n" .format(rtlim, np.count_nonzero(np.array(rt1s) < rtlim)/float(len(rt1s))))
 
     f.write("Actual r_t2 (arcmin) \t\t: {0} \n" .format(rt2s[0]))
@@ -869,6 +964,7 @@ with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 
     f.write("Min r_t2 (arcmin) \t\t: {0} \n" .format(np.amin(rt2s)))
     lower, upper = st.t.interval(0.95, len(rt2s)-1, loc=np.mean(rt2s), scale=st.sem(rt2s))
     f.write("95% Confidence Limits (arcmin) \t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n" .format(np.percentile(rt2s, 2.5, interpolation='nearest'), np.percentile(rt2s, 97.5, interpolation='nearest')))
     f.write("Fraction smaller than {0} \t: {1} \n\n" .format(rtlim, np.count_nonzero(np.array(rt2s) < rtlim)/float(len(rt2s))))
 
     f.write("Actual Inclination (degrees) \t: {0} \n" .format(np.rad2deg(thetas[0])))
@@ -876,49 +972,65 @@ with open('galacticorbitmc_{0}_{1}_{2}_{3}.res' .format(name, pot, NMC, NSTEP), 
     f.write("Max Inclination (degrees) \t: {0} \n" .format(np.rad2deg(np.amax(thetas))))
     f.write("Min Inclination (degrees) \t: {0} \n" .format(np.rad2deg(np.amin(thetas))))
     lower, upper = st.t.interval(0.95, len(thetas)-1, loc=np.rad2deg(np.mean(thetas)), scale=np.rad2deg(st.sem(thetas)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(thetas, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(thetas, 97.5, interpolation='nearest'))))
 
     f.write("Actual Longitude (degrees) \t: {0} \n" .format(np.rad2deg(omegas[0])))
     f.write("Mean Longitude (degrees) \t: {0} +- {1} \n" .format(np.rad2deg(np.mean(omegas)), np.rad2deg(np.std(omegas))))
     f.write("Max Longitude (degrees) \t: {0} \n" .format(np.rad2deg(np.amax(omegas))))
     f.write("Min Longitude (degrees) \t: {0} \n" .format(np.rad2deg(np.amin(omegas))))
     lower, upper = st.t.interval(0.95, len(omegas)-1, loc=np.rad2deg(np.mean(omegas)), scale=np.rad2deg(st.sem(omegas)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(omegas, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(omegas, 97.5, interpolation='nearest'))))
 
     f.write("Actual lpole (degrees) \t\t: {0} \n" .format(np.rad2deg(lpoles[0])))
     f.write("Mean lpole (degrees) \t\t: {0} +- {1} \n" .format(np.rad2deg(np.mean(lpoles)), np.rad2deg(np.std(lpoles))))
     f.write("Max lpole (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amax(lpoles))))
     f.write("Min lpole (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amin(lpoles))))
     lower, upper = st.t.interval(0.95, len(lpoles)-1, loc=np.rad2deg(np.mean(lpoles)), scale=np.rad2deg(st.sem(lpoles)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(lpoles, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(lpoles, 97.5, interpolation='nearest'))))
 
     f.write("Actual bpole (degrees) \t\t: {0} \n" .format(np.rad2deg(bpoles[0])))
     f.write("Mean bpole (degrees) \t\t: {0} +- {1} \n" .format(np.rad2deg(np.mean(bpoles)), np.rad2deg(np.std(bpoles))))
     f.write("Max bpole (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amax(bpoles))))
     f.write("Min bpole (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amin(bpoles))))
     lower, upper = st.t.interval(0.95, len(bpoles)-1, loc=np.rad2deg(np.mean(bpoles)), scale=np.rad2deg(st.sem(bpoles)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(bpoles, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(bpoles, 97.5, interpolation='nearest'))))
 
     f.write("Actual lam (degrees) \t\t: {0} \n" .format(np.rad2deg(lam0s[0])))
     f.write("Mean lam (degrees) \t\t: {0} +- {1} \n" .format(np.rad2deg(np.mean(lam0s)), np.rad2deg(np.std(lam0s))))
     f.write("Max lam (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amax(lam0s))))
     f.write("Min lam (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amin(lam0s))))
     lower, upper = st.t.interval(0.95, len(lam0s)-1, loc=np.rad2deg(np.mean(lam0s)), scale=np.rad2deg(st.sem(lam0s)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(lam0s, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(lam0s, 97.5, interpolation='nearest'))))
 
     f.write("Actual bam (degrees) \t\t: {0} \n" .format(np.rad2deg(bam0s[0])))
     f.write("Mean bam (degrees) \t\t: {0} +- {1} \n" .format(np.rad2deg(np.mean(bam0s)), np.rad2deg(np.std(bam0s))))
     f.write("Max bam (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amax(bam0s))))
     f.write("Min bam (degrees) \t\t: {0} \n" .format(np.rad2deg(np.amin(bam0s))))
     lower, upper = st.t.interval(0.95, len(bam0s)-1, loc=np.rad2deg(np.mean(bam0s)), scale=np.rad2deg(st.sem(bam0s)))
-    f.write("95% Confidence Limits \t\t: {0} {1} \n\n" .format(lower, upper))
+    f.write("95% Confidence Limits \t\t: {0} {1} \n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}\n\n" .format(np.rad2deg(np.percentile(bam0s, 2.5, interpolation='nearest')), \
+                                                                 np.rad2deg(np.percentile(bam0s, 97.5, interpolation='nearest'))))
 
     f.write("Average change lam, bam (deg) \t: {0} {1} \n\n" .format(np.rad2deg(np.nanmean(dlams)), np.rad2deg(np.nanmean(dbams))))
 
     f.write("Some statistics on the percent change in energy from start to finish, \n")
     f.write("to serve as a check on the acceptability of the integration precision:\n\n")
 
-    f.write("Mean deltaE/E_0 : {0} +- {1} \n" .format(np.mean(deltaEs), np.std(deltaEs)))
-    f.write("Median deltaE/E_0 : {0} \n" .format(np.median(deltaEs)))
-    f.write("Max deltaE/E_0 \t: {0} \n" .format(np.amax(deltaEs)))
-    f.write("Min deltaE/E_0 \t: {0} \n" .format(np.amin(deltaEs)))
+    f.write("Mean deltaE/E_0 \t\t: {0} +- {1} \n" .format(np.mean(deltaEs), np.std(deltaEs)))
+    f.write("Median deltaE/E_0 \t\t: {0} \n" .format(np.median(deltaEs)))
+    f.write("Max deltaE/E_0 \t\t\t: {0} \n" .format(np.amax(deltaEs)))
+    f.write("Min deltaE/E_0 \t\t\t: {0} \n" .format(np.amin(deltaEs)))
+    lower, upper = st.t.interval(0.95, len(deltaEs)-1, loc=np.mean(deltaEs), scale=st.sem(deltaEs))
+    f.write("95% Confidence Limits \t\t: {0} {1}\n" .format(lower, upper))
+    f.write("2.5, 97.5 Percentile \t\t: {0} {1}" .format(np.percentile(deltaEs, 2.5, interpolation='nearest'), \
+                                                             np.percentile(deltaEs, 97.5, interpolation='nearest')))
